@@ -68,7 +68,8 @@ decide to ignore the <q ID> return and only react to <Q ID> triggers.
 #include "StringFormatter.h"
 #include "Sensors.h"
 #include "EEStore.h"
-
+#include <DIO2.h>
+#include "AnalogReadFast.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -84,7 +85,9 @@ void Sensor::checkAll(Print *stream){
   if (firstSensor == NULL) return;
   if (readingSensor == NULL) readingSensor=firstSensor;
 
-  bool sensorstate = digitalRead(readingSensor->data.pin);
+  bool sensorstate;
+  if (readingSensor->data.pullUp==SENSOR_FLAG_ANALOG) sensorstate=analogReadFast(readingSensor->data.pin)>1;
+  else sensorstate=digitalRead2(readingSensor->data.pin);
 
   if (!sensorstate == readingSensor->active) { // active==true means sensorstate=0/false so sensor unchanged
     // no change
@@ -141,12 +144,10 @@ Sensor *Sensor::create(int snum, int pin, int pullUp){
 
   tt->data.snum=snum;
   tt->data.pin=pin;
-  tt->data.pullUp=(pullUp==0?LOW:HIGH);
+  tt->data.pullUp=pullUp;  // 0=INPUT, 1=INPUTPULLUP,2=ANALOG
   tt->active=false;
   tt->latchdelay=0;
-  pinMode(pin,INPUT);         // set mode to input
-  digitalWrite(pin,pullUp);   // don't use Arduino's internal pull-up resistors for external infrared sensors --- each sensor must have its own 1K external pull-up resistor
-
+  if (pullUp<2) pinMode(pin,pullUp==0?INPUT:INPUT_PULLUP);         // set mode to input
   return tt;
 
 }

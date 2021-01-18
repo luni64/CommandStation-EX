@@ -22,6 +22,9 @@
 #include "Arduino.h"
 
 #define  SENSOR_DECAY  0.03
+#define  SENSOR_FLAG_PULLUP  0x01
+#define  SENSOR_FLAG_ANALOG  0x02
+#define  SENSOR_FLAG_I2C     0x03
 
 struct SensorData {
   int snum;

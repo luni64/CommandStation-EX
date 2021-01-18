@@ -51,6 +51,7 @@ const int HASH_KEYWORD_LIMIT = 27413;
 const int HASH_KEYWORD_ETHERNET = -30767;    
 const int HASH_KEYWORD_MAX = 16244;
 const int HASH_KEYWORD_MIN = 15978;
+const int HASH_KEYWORD_ANALOG = -1494; 
 
 int DCCEXParser::stashP[MAX_PARAMS];
 bool DCCEXParser::stashBusy;
@@ -650,12 +651,19 @@ bool DCCEXParser::parseS(Print *stream, int params, int p[])
 
     switch (params)
     {
-    case 3: // <S id pin pullup>  create sensor. pullUp indicator (0=LOW/1=HIGH)
-        if (!Sensor::create(p[0], p[1], p[2]))
-          return false;
+    case 3:            
+            {
+               if (p[1]== HASH_KEYWORD_ANALOG) { // or <S id ANALOG pin>
+                   if (!Sensor::create(p[0], p[2], SENSOR_FLAG_ANALOG))return false;
+               }
+               else { // <S id pin pullup>  create sensor. pullUp indicator (0=LOW/1=HIGH)
+                  if (p[2]>1 || p[2]<0) return false; 
+//                  if (!Sensor::create(p[0], p[1], p[2]==1?SENSOR_FLAG_PULLUP:0)) return false;               
+               }
+            }
         StringFormatter::send(stream, F("<O>"));
         return true;
-
+   
     case 1: // S id> remove sensor
         if (!Sensor::remove(p[0]))
           return false;

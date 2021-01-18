@@ -60,19 +60,6 @@ RMFT2 * RMFT2::pausingTask=NULL; // Task causing a PAUSE.
 }
 
 #include <stdarg.h>
- void RMFT2::setupCommands(const __FlashStringHelper* cmd...) {
-  va_list args;
-  va_start(args, cmd);
-  char* next=(char *)cmd;
-  DCCEXParser parser;
-  while(next) {
-      int size=strlen_P(next)+1; 
-      char buffer[size];
-      strcpy_P(buffer,next);
-      parser.parse(&Serial,(byte *)buffer,true);
-      next=(char*)va_arg(args, char*);
-  }
- }
 
 
 // This filter intercepst <> commands to do the following:
@@ -83,13 +70,13 @@ void RMFT2::ComandFilter(Print * stream, byte & opcode, byte & paramCount, int p
     bool reject=false;
     switch(opcode) {
         
-     case 'S': // Reject all JMRI sensor commands
-     case 'Q': // Reject all JMRI sensor commands
-     case 'Z': // Reject all output commands
-     case 'E': // Reject all EEPROM commands
-     case 'e': // Reject all EEPROM commands
-          reject=true;
-          break;
+//     case 'S': // Reject all JMRI sensor commands
+//     case 'Q': // Reject all JMRI sensor commands
+//     case 'Z': // Reject all output commands
+//     case 'E': // Reject all EEPROM commands
+//     case 'e': // Reject all EEPROM commands
+//          reject=true;
+//          break;
 
      case 'D':
         if (p[0]==HASH_KEYWORD_RMFT) { // <D RMFT ON/OFF>

@@ -31,7 +31,6 @@
   private: 
     static void ComandFilter(Print * stream, byte & opcode, byte & paramCount, int p[]);
     static bool parseSlash(Print * stream, byte & paramCount, int p[]) ;
-    static void setupCommands(const __FlashStringHelper* input...);
     
     static int locateRouteStart(short _route);
     static int progtrackLocoId;

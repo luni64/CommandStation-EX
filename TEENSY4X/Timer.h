@@ -6,35 +6,24 @@
 class Timer : public VirtualTimer
 {
  public:
-    Timer(int timer_num) {}
+    Timer(int timer_num) {} 
 
     void initialize()
-    {
-        //Serial.println("init");
+    {       
         if (timer != nullptr) stop();
         timer = new IntervalTimer();
     }
 
     void setPeriod(unsigned long mu)
-    {
-        //Serial.printf("setPeriod(%d)\n", mu);
+    {     
         microseconds = mu;
     }
     void start()
-    {
-        //Serial.printf("start89\n");
-        if (timer != nullptr && isrCallback != nullptr)
-        {
-            timer->begin(isrCallback, microseconds);
-        }
-        else
-        {
-            Serial.printf("start error");
-        }
+    {     
+        timer->begin(isrCallback, microseconds);        
     }
     void stop()
-    {
-        //Serial.printf("stop()\n");
+    {     
         if (timer != nullptr)
         {
             timer->end();    //this will release the timer, I assume that the lib doesn't call start after stop without initializing.
@@ -44,8 +33,7 @@ class Timer : public VirtualTimer
     }
 
     void attachInterrupt(void (*isr)())
-    {
-        //Serial.printf("attachInterrupt()\n");
+    {        
         isrCallback = isr;
     }
 

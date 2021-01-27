@@ -23,8 +23,7 @@ void setup()
 
   // Responsibility 1: Start the usb connection for diagnostics
   // This is normally Serial but uses SerialUSB on a SAMD processor
-  Serial.begin(115200);
-  while(!Serial);
+  Serial.begin(115200);  
   delay(5000);
   DIAG(F("DCC++ EX v%S"),F(VERSION));
    

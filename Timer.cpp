@@ -51,7 +51,10 @@ ISR(TIMER2_OVF_vect)
 
 #elif defined(TEENSYDUINO)
 
-#include "Teensy4X/Timer.h"   
+//#include "Teensy4X/Timer.h"     // using IntervalTimer
+#include "TEENSY_TTT/Timer.h"     // using TimerTool TCK timers (software timers)
+
+
 Timer TimerA(1);   // use the timer numbers to select which timer you want to create in timer.h
 Timer TimerB(2);
 Timer TimerC(3);

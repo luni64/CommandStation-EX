@@ -5,58 +5,48 @@
 
 class Timer : public VirtualTimer
 {
- private:
-    int pwmPeriod;
-    unsigned long timer_resolution;
-    unsigned char clockSelectBits;
-    int timer_num;
-    unsigned long lastMicroseconds;
-
-    uint32_t microseconds;
-
-    IntervalTimer* timer = nullptr;
-
  public:
-    Timer(int timer_num)
-    {
-        this->timer_num = timer_num; 
-        lastMicroseconds = 0;
-    }
-
-    void (*isrCallback)();
+    Timer(int timer_num) {}
 
     void initialize()
     {
+        //Serial.println("init");
+        if (timer != nullptr) stop();
         timer = new IntervalTimer();
     }
 
     void setPeriod(unsigned long mu)
     {
+        //Serial.printf("setPeriod(%d)\n", mu);
         microseconds = mu;
     }
     void start()
     {
-        if(timer != nullptr && isrCallback != nullptr)
+        //Serial.printf("start89\n");
+        if (timer != nullptr && isrCallback != nullptr)
         {
             timer->begin(isrCallback, microseconds);
         }
         else
         {
-            // some error message to check if the lib calls start without prior intializing
+            Serial.printf("start error");
         }
     }
     void stop()
     {
-        if(timer != nullptr)
+        //Serial.printf("stop()\n");
+        if (timer != nullptr)
         {
-            timer->end();    //this will release the timer, I assume that the lib doesn't start after stop without initializing.
+            timer->end();    //this will release the timer, I assume that the lib doesn't call start after stop without initializing.
+            delete timer;
             timer = nullptr; // If so -> start would error. In case the lib wants to stop/start something more elaborate needs to be done here
         }
     }
 
     void attachInterrupt(void (*isr)())
     {
-         isrCallback = isr;
+        //Serial.printf("attachInterrupt()\n");
+        isrCallback = isr;
     }
 
     void detachInterrupt()
@@ -64,6 +54,11 @@ class Timer : public VirtualTimer
         stop();
         isrCallback = nullptr;
     }
+
+ private:
+    uint32_t microseconds;
+    IntervalTimer* timer = nullptr;
+    void (*isrCallback)();
 };
 
 extern Timer TimerA;

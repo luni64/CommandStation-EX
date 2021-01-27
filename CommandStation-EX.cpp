@@ -24,6 +24,7 @@ void setup()
   // Responsibility 1: Start the usb connection for diagnostics
   // This is normally Serial but uses SerialUSB on a SAMD processor
   Serial.begin(115200);
+  while(!Serial);
   DIAG(F("DCC++ EX v%S"),F(VERSION));
    
   CONDITIONAL_LCD_START {
